@@ -9,7 +9,7 @@ namespace IELTSpeaking
 {
     class ReadDatabase
     {
-        public static List<Part1> _databasePart1 = new List<Part1>();
+        private static List<Part1> _databasePart1 = new List<Part1>();
         public ReadDatabase()
         {
             string textFile = @"C:\Users\Administrator\source\repos\IELTSpeaking\IELTSpeaking\ielts-speaking-part1-db.txt";
@@ -49,18 +49,13 @@ namespace IELTSpeaking
             //    }
             //}
         }
-        public string ReadPart1()
+        public List<string> ReadPart1()
         {
-            string allQuestions = "";
-            foreach (Part1 part in ReadDatabase._databasePart1)
-            {
-                allQuestions = string.Concat(allQuestions, part.idTopic + "\r\n");
-                foreach (string question in part.questions)
-                {
-                    allQuestions = string.Concat(allQuestions, question + "\r\n");
-                }
-            }
-            return allQuestions;
+            Random rnd = new Random();
+            int card = rnd.Next(_databasePart1.Count);
+            List<string> questions = _databasePart1[card].questions;
+            _databasePart1.RemoveAt(card);
+            return questions;
         }
     }
 }

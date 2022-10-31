@@ -21,7 +21,7 @@ namespace IELTSpeaking
         private void ReadDB()
         {
             ReadDatabase readDatabase = new ReadDatabase();
-            questions.Text = readDatabase.ReadPart1();
+            List<string> questions = readDatabase.ReadPart1();
         }
 
         private void IELTSpeaking_Load(object sender, EventArgs e)
