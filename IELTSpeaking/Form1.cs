@@ -23,10 +23,21 @@ namespace IELTSpeaking
             ReadDatabase readDatabase = new ReadDatabase();
             List<string> questions = readDatabase.ReadPart1();
         }
+        private void LoadImage()
+        {
+            examinerImg.Image = new ExaminerImage().LoadImage();
+        }
 
         private void IELTSpeaking_Load(object sender, EventArgs e)
         {
             ReadDB();
+            LoadImage();
+        }
+
+        private void startBtn_Click(object sender, EventArgs e)
+        {
+            new Speech().Speak();
+            //new Speech().GenerateVoiceWavFromText("Good afternoon. My name is Kristina Pollock. Could I have your name, please?", @"c:\", "yourfile");
         }
     }
 }
