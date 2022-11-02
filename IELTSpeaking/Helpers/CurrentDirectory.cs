@@ -8,6 +8,6 @@ namespace IELTSpeaking
 {
     static class CurrentDirectory
     {
-        public static readonly string Directory = System.IO.Directory.GetCurrentDirectory() + "\\..\\..";
+        public static readonly string Directory = System.IO.Directory.GetCurrentDirectory();
     }
 }

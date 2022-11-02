@@ -15,12 +15,14 @@ namespace IELTSpeaking
 {
     class Speech
     {
-        //private readonly SpeechSynthesizer _speaker = new SpeechSynthesizer();
-        public string awsAccessKey = "AKIA4JWH7KWMVYDQALXF";
-        public string awsAccessSecret = "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";
+        public string awsAccessKey = "";
+        public string awsAccessSecret = "";
 
         public async void GenerateVoiceWavFromText(string textMessage, string path, string fileName)
         {
+            string decodedKey = Encode.Decipher(awsAccessKey, 3);
+            string decodedSecret = Encode.Decipher(awsAccessSecret, 3);
+
             if (string.IsNullOrEmpty(textMessage))
             {
                 throw new Exception("textMessage can't be empty");
@@ -43,10 +45,7 @@ namespace IELTSpeaking
 
             string outputFileName = Path.Combine(path, fileName);
 
-            //var config = new AmazonPollyConfig();
-
-            //var client = new AmazonPollyClient(this.awsAccessKey, this.awsAccessSecret, config);
-            var client = new AmazonPollyClient(this.awsAccessKey, this.awsAccessSecret, RegionEndpoint.USEast1);
+            var client = new AmazonPollyClient(decodedKey, decodedSecret, RegionEndpoint.USEast1);
 
             var synthesizeSpeechRequest = new SynthesizeSpeechRequest()
             {
@@ -84,22 +83,23 @@ namespace IELTSpeaking
                 readPcmStream.Close();
             }
         }
-        public void Speak()
+        public async void Speak()
         {
-            //_speaker.Rate = 1;
-            //_speaker.Volume = 100;
-            //_speaker.Speak("Good afternoon. My name is Kristina Pollock. Could I have your name, please?");
+            string decodedKey = Encode.Decipher(awsAccessKey, 3);
+            string decodedSecret = Encode.Decipher(awsAccessSecret, 3);
 
-            AmazonPollyClient pc = new AmazonPollyClient(awsAccessKey, awsAccessSecret, RegionEndpoint.USEast1);
+            AmazonPollyClient pc = new AmazonPollyClient(decodedKey, decodedSecret, RegionEndpoint.USEast1);
 
-            SynthesizeSpeechRequest sreq = new SynthesizeSpeechRequest();
-            sreq.Text = "Good afternoon. My name is Kristina Pollock. Could I have your name, please?";
-            sreq.OutputFormat = OutputFormat.Mp3;
-            sreq.VoiceId = VoiceId.Joey;
-            
-            SynthesizeSpeechResponse sres = pc.SynthesizeSpeech(sreq);
+            SynthesizeSpeechRequest sreq = new SynthesizeSpeechRequest
+            {
+                Engine = "neural",
+                OutputFormat = OutputFormat.Mp3,
+                Text = "Good afternoon. My name is Kristina Pollock. Could I have your name, please?",
+                VoiceId = VoiceId.Ayanda
+            };
 
-            using (var fileStream = File.Create(@"c:\yourfile.mp3"))
+            SynthesizeSpeechResponse sres = await pc.SynthesizeSpeechAsync(sreq);
+            using (var fileStream = File.Create(CurrentDirectory.Directory + "\\yourfile.mp3"))
             {
                 sres.AudioStream.CopyTo(fileStream);
                 fileStream.Flush();
