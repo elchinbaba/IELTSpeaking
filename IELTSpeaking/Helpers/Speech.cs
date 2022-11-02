@@ -15,14 +15,10 @@ namespace IELTSpeaking
 {
     class Speech
     {
-        public string awsAccessKey = "";
-        public string awsAccessSecret = "";
-
+        private readonly string _key = Credentials.awsAccessKey;
+        private readonly string _secret = Credentials.awsAccessSecret;
         public async void GenerateVoiceWavFromText(string textMessage, string path, string fileName)
         {
-            string decodedKey = Encode.Decipher(awsAccessKey, 3);
-            string decodedSecret = Encode.Decipher(awsAccessSecret, 3);
-
             if (string.IsNullOrEmpty(textMessage))
             {
                 throw new Exception("textMessage can't be empty");
@@ -45,7 +41,7 @@ namespace IELTSpeaking
 
             string outputFileName = Path.Combine(path, fileName);
 
-            var client = new AmazonPollyClient(decodedKey, decodedSecret, RegionEndpoint.USEast1);
+            var client = new AmazonPollyClient(_key, _secret, RegionEndpoint.USEast1);
 
             var synthesizeSpeechRequest = new SynthesizeSpeechRequest()
             {
@@ -85,10 +81,7 @@ namespace IELTSpeaking
         }
         public async void Speak()
         {
-            string decodedKey = Encode.Decipher(awsAccessKey, 3);
-            string decodedSecret = Encode.Decipher(awsAccessSecret, 3);
-
-            AmazonPollyClient pc = new AmazonPollyClient(decodedKey, decodedSecret, RegionEndpoint.USEast1);
+            AmazonPollyClient pc = new AmazonPollyClient(_key, _secret, RegionEndpoint.USEast1);
 
             SynthesizeSpeechRequest sreq = new SynthesizeSpeechRequest
             {
