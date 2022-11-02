@@ -91,7 +91,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Helpers\Code\Encode.cs" />
-    <Compile Include="Helpers\Credentials\sagol.cs" />
+    <Compile Include="Helpers\Credentials\Credentials.cs" />
     <Compile Include="Helpers\ExaminerImage.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
