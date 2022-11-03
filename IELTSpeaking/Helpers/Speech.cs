@@ -10,13 +10,19 @@ using Amazon.Polly.Model;
 using System.IO;
 using Amazon;
 using NAudio.Wave;
+using Microsoft.CognitiveServices.Speech;
+using Microsoft.CognitiveServices.Speech.Audio;
+using SpeechLib;
+using eSpeak;
 
 namespace IELTSpeaking
 {
     class Speech
     {
-        private readonly string _key = Credentials.awsAccessKey;
-        private readonly string _secret = Credentials.awsAccessSecret;
+        private static readonly string _key = Credentials.awsAccessKey;
+        private static readonly string _secret = Credentials.awsAccessSecret;
+        private static readonly string speechKey = Environment.GetEnvironmentVariable("SPEECH_KEY");
+        private static readonly string speechRegion = Environment.GetEnvironmentVariable("SPEECH_REGION");
         public async void GenerateVoiceWavFromText(string textMessage, string path, string fileName)
         {
             if (string.IsNullOrEmpty(textMessage))
@@ -45,7 +51,7 @@ namespace IELTSpeaking
 
             var synthesizeSpeechRequest = new SynthesizeSpeechRequest()
             {
-                OutputFormat = OutputFormat.Pcm,
+                OutputFormat = Amazon.Polly.OutputFormat.Pcm,
                 VoiceId = VoiceId.Brian,
                 Text = textMessage,
             };
@@ -79,14 +85,14 @@ namespace IELTSpeaking
                 readPcmStream.Close();
             }
         }
-        public async void Speak()
+        public async void AmazonSpeak()
         {
             AmazonPollyClient pc = new AmazonPollyClient(_key, _secret, RegionEndpoint.USEast1);
 
             SynthesizeSpeechRequest sreq = new SynthesizeSpeechRequest
             {
                 Engine = "neural",
-                OutputFormat = OutputFormat.Mp3,
+                OutputFormat = Amazon.Polly.OutputFormat.Mp3,
                 Text = "Good afternoon. My name is Kristina Pollock. Could I have your name, please?",
                 VoiceId = VoiceId.Ayanda
             };
@@ -98,6 +104,70 @@ namespace IELTSpeaking
                 fileStream.Flush();
                 fileStream.Close();
             }
+        }
+
+        static void OutputSpeechSynthesisResult(SpeechSynthesisResult speechSynthesisResult, string text)
+        {
+            switch (speechSynthesisResult.Reason)
+            {
+                case ResultReason.SynthesizingAudioCompleted:
+                    Console.WriteLine($"Speech synthesized for text: [{text}]");
+                    break;
+                case ResultReason.Canceled:
+                    var cancellation = SpeechSynthesisCancellationDetails.FromResult(speechSynthesisResult);
+                    Console.WriteLine($"CANCELED: Reason={cancellation.Reason}");
+
+                    if (cancellation.Reason == CancellationReason.Error)
+                    {
+                        Console.WriteLine($"CANCELED: ErrorCode={cancellation.ErrorCode}");
+                        Console.WriteLine($"CANCELED: ErrorDetails=[{cancellation.ErrorDetails}]");
+                        Console.WriteLine($"CANCELED: Did you set the speech resource key and region values?");
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        public async void AzureSpeak()
+        {
+            var speechConfig = SpeechConfig.FromSubscription(speechKey, speechRegion);
+
+            speechConfig.SpeechSynthesisVoiceName = "en-US-JennyNeural";
+
+            using (var speechSynthesizer = new Microsoft.CognitiveServices.Speech.SpeechSynthesizer(speechConfig))
+            {
+                // Get text from the console and synthesize to the default speaker.
+                string text = "Good afternoon. My name is Kristina Pollock. Could I have your name, please?";
+
+                var speechSynthesisResult = await speechSynthesizer.SpeakTextAsync(text);
+                OutputSpeechSynthesisResult(speechSynthesisResult, text);
+            }
+        }
+
+        public void Speak()
+        {
+            var synthesizer = new System.Speech.Synthesis.SpeechSynthesizer();
+            PromptBuilder builder = new PromptBuilder();
+            builder.AppendText("That is a big pizza!");
+            foreach (InstalledVoice voice in synthesizer.GetInstalledVoices())
+            {
+                System.Speech.Synthesis.VoiceInfo info = voice.VoiceInfo;
+                MessageBox.Show(" Voice Name: " + info.Name);
+            }
+            synthesizer.SelectVoice("Microsoft Zira Desktop");
+
+            synthesizer.SpeakAsync("Good afternoon. My name is Kristina Pollock. Could I have your name, please?");
+        }
+        public void SpeechLib_5_4_Speak()
+        {
+            SpVoice spVoice = new SpVoice();
+            spVoice.Speak("Good afternoon. My name is Kristina Pollock. Could I have your name, please?");
+        }
+        public void eSpeak_Speak()
+        {
+            Speaker speaker = Speaker.FromInstalled();
+            speaker.SpeakText("Good afternoon. My name is Kristina Pollock. Could I have your name, please?");
         }
     }
 }

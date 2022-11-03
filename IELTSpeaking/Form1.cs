@@ -32,14 +32,17 @@ namespace IELTSpeaking
         {
             ReadDB();
             LoadImage();
-            new Speech().Speak();
+            //new Speech().AmazonSpeak();
         }
 
         private void startBtn_Click(object sender, EventArgs e)
         {
+            //new Speech().SpeechLib_5_4_Speak();
+            //new Speech().Speak();
+            new Speech().eSpeak_Speak();
             //new Speech().GenerateVoiceWavFromText("Good afternoon. My name is Kristina Pollock. Could I have your name, please?",
             //@"c:\", "yourfile");
-            new Read().ReadMP3();
+            //new Read().ReadMP3();
         }
     }
 }
