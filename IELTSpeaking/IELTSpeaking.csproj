@@ -105,8 +105,12 @@
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
     <Compile Include="Helpers\CurrentDirectory.cs" />
-    <Compile Include="Helpers\Read.cs" />
-    <Compile Include="Helpers\Speech.cs" />
+    <Compile Include="Helpers\Speech\Amazon\Read.cs" />
+    <Compile Include="Helpers\Speech\Amazon\AWS.cs" />
+    <Compile Include="Helpers\Speech\Azure.cs" />
+    <Compile Include="Helpers\Speech\eSpeak.cs" />
+    <Compile Include="Helpers\Speech\Speech.cs" />
+    <Compile Include="Helpers\Speech\SpeechLib.cs" />
     <Compile Include="Types\Part1.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

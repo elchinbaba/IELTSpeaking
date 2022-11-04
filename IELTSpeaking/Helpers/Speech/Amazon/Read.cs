@@ -7,7 +7,7 @@ using System.Windows.Forms;
 using NAudio;
 using NAudio.Wave;
 
-namespace IELTSpeaking
+namespace IELTSpeaking.Helpers.Speech.Amazon
 {
     class Read
     {
