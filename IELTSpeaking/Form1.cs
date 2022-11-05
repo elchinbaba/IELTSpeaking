@@ -9,6 +9,9 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
 using IELTSpeaking.Helpers.Speech;
+using NAudio;
+using NAudio.Wave;
+using NAudio.CoreAudioApi;
 
 namespace IELTSpeaking
 {
@@ -27,33 +30,69 @@ namespace IELTSpeaking
         {
             startBtn.Enabled = true;
         }
-        private async void Speak(Speech speech, string text)
+        private void HideBtn()
+        {
+            startBtn.Visible = false;
+        }
+        private async Task Speak(Speech speech, string text)
         {
             DisableBtn();
             await speech.SpeakAsync(text);
-            EnableBtn();
+            HideBtn();
+            //EnableBtn();
         }
-        private void ReadDB()
+        private async Task Play()
         {
-            ReadDatabase readDatabase = new ReadDatabase();
-            List<string> questions = readDatabase.ReadPart1();
+            MicWave.Visible = true;
+
+            TimerSpeak.Start();
+            new WaveIn().StartRecording();
+
+            await Task.Delay(3000);
+
+            ContinueBtn.Visible = true;
         }
         private void LoadImage()
         {
             examinerImg.Image = new ExaminerImage().LoadImage();
         }
+        private async void Go()
+        {
+            await Speak(new Speech(), Game.text);
 
+            await Play();
+        }
         private void IELTSpeaking_Load(object sender, EventArgs e)
         {
-            ReadDB();
+            MicWave.Visible = false;
+            ContinueBtn.Visible = false;
+
+            Game.Start();
             LoadImage();
         }
 
         private void startBtn_Click(object sender, EventArgs e)
         {
-            Speech speech = new Speech();
-            string text = "Good afternoon. My name is Kristina Pollock. Could I have your name, please?";
-            Speak(speech, text);
+            Go();
+        }
+
+        private void TimerSpeak_Tick(object sender, EventArgs e)
+        {
+            MMDevice device = new MMDeviceEnumerator().EnumerateAudioEndPoints(DataFlow.All, DeviceState.Active)[1];
+            MicWave.Value = (int)Math.Round(device.AudioMeterInformation.MasterPeakValue * 100);
+        }
+
+        private void ContinueBtn_Click(object sender, EventArgs e)
+        {
+            ContinueBtn.Visible = false;
+            MicWave.Visible = false;
+            startBtn.Visible = true;
+
+            Game.NextStage();
+            if (Game.isOn)
+            {
+                Go();
+            }
         }
     }
 }

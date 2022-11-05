@@ -15,7 +15,7 @@ namespace IELTSpeaking.Helpers.Speech
         {
             SpeechSynthesizer synthesizer = new SpeechSynthesizer()
             {
-                Rate = 2
+                
             };
             synthesizer.SelectVoice("Microsoft Zira Desktop");
             await Task.Run(() => synthesizer.Speak(text));
