@@ -35,6 +35,9 @@ namespace IELTSpeaking
             this.TimerSpeak = new System.Windows.Forms.Timer(this.components);
             this.MicWave = new System.Windows.Forms.ProgressBar();
             this.ContinueBtn = new System.Windows.Forms.Button();
+            this.Part2TxtBox = new System.Windows.Forms.TextBox();
+            this.tmrPart2 = new System.Windows.Forms.Timer(this.components);
+            this.lblPart2Time = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.examinerImg)).BeginInit();
             this.SuspendLayout();
             // 
@@ -81,30 +84,60 @@ namespace IELTSpeaking
             this.ContinueBtn.UseVisualStyleBackColor = true;
             this.ContinueBtn.Click += new System.EventHandler(this.ContinueBtn_Click);
             // 
+            // Part2TxtBox
+            // 
+            this.Part2TxtBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Part2TxtBox.Location = new System.Drawing.Point(128, 44);
+            this.Part2TxtBox.Multiline = true;
+            this.Part2TxtBox.Name = "Part2TxtBox";
+            this.Part2TxtBox.ReadOnly = true;
+            this.Part2TxtBox.Size = new System.Drawing.Size(589, 391);
+            this.Part2TxtBox.TabIndex = 4;
+            // 
+            // tmrPart2
+            // 
+            this.tmrPart2.Interval = 1000;
+            this.tmrPart2.Tick += new System.EventHandler(this.tmrPart2_Tick);
+            // 
+            // lblPart2Time
+            // 
+            this.lblPart2Time.AutoSize = true;
+            this.lblPart2Time.Font = new System.Drawing.Font("Microsoft Sans Serif", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblPart2Time.Location = new System.Drawing.Point(648, 454);
+            this.lblPart2Time.Name = "lblPart2Time";
+            this.lblPart2Time.Size = new System.Drawing.Size(69, 29);
+            this.lblPart2Time.TabIndex = 5;
+            this.lblPart2Time.Text = "Time";
+            // 
             // IELTSpeaking
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(843, 622);
+            this.Controls.Add(this.lblPart2Time);
             this.Controls.Add(this.ContinueBtn);
             this.Controls.Add(this.startBtn);
-            this.Controls.Add(this.examinerImg);
             this.Controls.Add(this.MicWave);
+            this.Controls.Add(this.examinerImg);
+            this.Controls.Add(this.Part2TxtBox);
             this.Name = "IELTSpeaking";
             this.Text = "IELTSpeaking";
             this.Load += new System.EventHandler(this.IELTSpeaking_Load);
             ((System.ComponentModel.ISupportInitialize)(this.examinerImg)).EndInit();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
         #endregion
-
-        private System.Windows.Forms.PictureBox examinerImg;
-        private System.Windows.Forms.Button startBtn;
-        private System.Windows.Forms.Timer TimerSpeak;
-        private System.Windows.Forms.ProgressBar MicWave;
-        private System.Windows.Forms.Button ContinueBtn;
+        public System.Windows.Forms.PictureBox examinerImg;
+        public System.Windows.Forms.ProgressBar MicWave;
+        public System.Windows.Forms.Label lblPart2Time;
+        public System.Windows.Forms.Button ContinueBtn;
+        public System.Windows.Forms.Button startBtn;
+        public System.Windows.Forms.Timer TimerSpeak;
+        public System.Windows.Forms.TextBox Part2TxtBox;
+        public System.Windows.Forms.Timer tmrPart2;
     }
 }
 

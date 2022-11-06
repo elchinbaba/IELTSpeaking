@@ -97,6 +97,7 @@
   <ItemGroup>
     <Compile Include="Game.cs" />
     <Compile Include="Helpers\Code\Code.cs" />
+    <Compile Include="Helpers\Controller.cs" />
     <Compile Include="Helpers\Credentials\Credentials.cs" />
     <Compile Include="Helpers\ExaminerImage.cs" />
     <Compile Include="Form1.cs">
