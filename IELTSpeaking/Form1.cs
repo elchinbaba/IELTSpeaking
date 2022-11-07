@@ -5,7 +5,6 @@ namespace IELTSpeaking
 {
     public partial class IELTSpeaking : Form
     {
-        public int time;
         public IELTSpeaking()
         {
             InitializeComponent();
@@ -20,7 +19,7 @@ namespace IELTSpeaking
 
         private void startBtn_Click(object sender, EventArgs e)
         {
-            Game.Go();
+            Game.GoStart();
         }
 
         private void TimerSpeak_Tick(object sender, EventArgs e)
