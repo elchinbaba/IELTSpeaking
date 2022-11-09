@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+
 using IELTSpeaking.Helpers;
 using IELTSpeaking.Stages;
 using IELTSpeaking.Helpers.Speech;
@@ -18,10 +19,24 @@ namespace IELTSpeaking
         public static IStage stage;
         public static List<string> questionsPart1 = new List<string>{ "hi" }, questionsPart3 = new List<string>{ "bye" };
         public static string questionsPart2;
+        public static MMDevice device;
+
+        private static void CheckMicrophone()
+        {
+            MMDeviceCollection devices = new MMDeviceEnumerator().EnumerateAudioEndPoints(DataFlow.All, DeviceState.Active);
+            foreach (MMDevice dev in devices)
+            {
+                if (dev.FriendlyName.StartsWith("Microphone"))
+                {
+                    device = dev;
+                    return;
+                }
+            }
+            throw new Exception("No Microphone");
+        }
 
         public static void TimerSpeak_Tick()
         {
-            MMDevice device = new MMDeviceEnumerator().EnumerateAudioEndPoints(DataFlow.All, DeviceState.Active)[1];
             int value = (int)Math.Round(device.AudioMeterInformation.MasterPeakValue * 100);
             int random = new Random().Next(15, 25);
             if (value > 0 && value < 50) value += random;
@@ -44,13 +59,23 @@ namespace IELTSpeaking
         public static async Task Play(int time)
         {
             Controller.ShowControl(iELTSpeaking.MicWave);
-            Controller.StartTimer(iELTSpeaking.TimerSpeak);
 
-            new WaveIn().StartRecording();
+            try
+            {
+                CheckMicrophone();
 
-            await Task.Delay(time * 1000);
+                Controller.StartTimer(iELTSpeaking.TimerSpeak);
 
-            Controller.ShowControl(iELTSpeaking.ContinueBtn);
+                new WaveIn().StartRecording();
+
+                await Task.Delay(time * 1000);
+
+                Controller.ShowControl(iELTSpeaking.ContinueBtn);
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message);
+            }
         }
         private static void InitStage()
         {
