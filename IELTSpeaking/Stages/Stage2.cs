@@ -47,6 +47,9 @@ namespace IELTSpeaking.Stages
             Controller.ShowControl(Game.iELTSpeaking.lblPart2Time);
             await Task.Run(() => Task.Delay(time * 1000));
             Controller.StopTimer(Game.iELTSpeaking.tmrPart2);
+
+            await Game.Speak("So now you have two minutes to talk about this topic.");
+
             time = 120;
             Controller.StartTimer(Game.iELTSpeaking.tmrPart2);
             Controller.ShowControl(Game.iELTSpeaking.MicWave);
